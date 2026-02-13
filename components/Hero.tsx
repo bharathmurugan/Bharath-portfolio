@@ -7,21 +7,60 @@ import { motion } from "framer-motion";
 
 export function Hero() {
   return (
-    <section className="relative min-h-screen flex items-center justify-center px-6 pt-20 overflow-hidden 
-                        bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-900">
-
+    <section
+      className="relative min-h-screen flex items-center justify-center px-6 pt-20 overflow-hidden 
+                 bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-900"
+    >
       {/* Animated Background Glow */}
       <div className="absolute -top-32 -left-32 w-[500px] h-[500px] bg-purple-600/20 blur-[120px] rounded-full animate-pulse" />
       <div className="absolute -bottom-32 -right-32 w-[500px] h-[500px] bg-blue-600/20 blur-[120px] rounded-full animate-pulse" />
 
       {/* Subtle Grid Overlay */}
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),
-                        linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)]
-                        bg-[size:40px_40px] pointer-events-none" />
+      <div
+        className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),
+                   linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)]
+                   bg-[size:40px_40px] pointer-events-none"
+      />
 
       <div className="relative mx-auto max-w-6xl w-full grid lg:grid-cols-2 gap-16 items-center">
 
-        {/* Left Content */}
+        {/* Image Section */}
+        <motion.div
+          className="flex items-center justify-center order-first lg:order-last"
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.8 }}
+        >
+          <div className="relative group animate-float mt-10 lg:mt-0">
+
+            {/* Glow Ring */}
+            <div
+              className="absolute inset-0 rounded-full bg-gradient-to-r 
+                         from-indigo-500 via-purple-500 to-cyan-500 
+                         blur-2xl opacity-40 group-hover:opacity-70 
+                         transition duration-500"
+            />
+
+            {/* Profile Image */}
+            <div
+              className="relative w-52 h-52 sm:w-64 sm:h-64 lg:w-80 lg:h-80 
+                         rounded-full overflow-hidden 
+                         border-4 border-indigo-400/30 shadow-2xl 
+                         transition-transform duration-500 group-hover:scale-105"
+            >
+              <Image
+                src="/Bharath.jpeg"
+                alt="Bharath M"
+                fill
+                priority
+                sizes="(max-width: 768px) 200px, 320px"
+                className="object-cover rounded-full"
+              />
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Text Section */}
         <motion.div
           className="space-y-8"
           initial={{ opacity: 0, y: 40 }}
@@ -29,19 +68,20 @@ export function Hero() {
           transition={{ duration: 0.8 }}
         >
           <div className="space-y-4">
-
             <p className="text-indigo-400 font-mono text-sm tracking-widest uppercase">
               Hello, I’m
             </p>
 
-            <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight">
-              <span className="bg-gradient-to-r from-purple-400 via-blue-400 to-cyan-400 
-                               bg-clip-text text-transparent animate-gradient">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight">
+              <span
+                className="bg-gradient-to-r from-purple-400 via-blue-400 to-cyan-400 
+                           bg-clip-text text-transparent"
+              >
                 Bharath M
               </span>
             </h1>
 
-            <p className="text-xl md:text-2xl text-slate-300 font-medium">
+            <p className="text-lg sm:text-xl md:text-2xl text-slate-300 font-medium">
               Software Developer
             </p>
           </div>
@@ -51,7 +91,7 @@ export function Hero() {
             problems, and writing clean, maintainable code.
           </p>
 
-          {/* Info */}
+          {/* Contact Info */}
           <div className="flex flex-wrap gap-6 text-sm text-slate-400">
             <span className="flex items-center gap-2 hover:text-indigo-400 transition">
               <MapPin size={16} />
@@ -65,7 +105,6 @@ export function Hero() {
 
           {/* Buttons */}
           <div className="pt-6 flex flex-wrap gap-4">
-
             <Link
               href="mailto:bharathmay2005@gmail.com"
               className="inline-flex items-center gap-3 px-8 py-3 rounded-full 
@@ -90,43 +129,8 @@ export function Hero() {
               <FileText size={18} />
               View Resume
             </Link>
-
           </div>
         </motion.div>
-
-        {/* Right Image */}
-        <motion.div
-          className="hidden lg:flex items-center justify-center"
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8 }}
-        >
-          <div className="relative group animate-float">
-
-            {/* Outer Glow Ring */}
-            <div className="absolute inset-0 rounded-full bg-gradient-to-r 
-                            from-indigo-500 via-purple-500 to-cyan-500 
-                            blur-2xl opacity-40 group-hover:opacity-70 
-                            transition duration-500" />
-
-            {/* Profile */}
-            <div className="relative w-80 h-80 rounded-full overflow-hidden 
-                            border-4 border-indigo-400/30 shadow-2xl 
-                            transition-transform duration-500 group-hover:scale-105">
-
-              <Image
-                src="/Bharath.jpeg"
-                alt="Bharath M"
-                width={320}
-                height={320}
-                priority
-                className="object-cover w-full h-full rounded-full"
-              />
-
-            </div>
-          </div>
-        </motion.div>
-
       </div>
     </section>
   );
