@@ -11,8 +11,10 @@ import {
   Send,
   Copy,
   Check,
+  X,
 } from "lucide-react";
 import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 export function Contact() {
   const [copied, setCopied] = useState(false);
@@ -22,7 +24,7 @@ export function Contact() {
     message: "",
   });
   const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
+  const [showPopup, setShowPopup] = useState(false);
 
   const handleCopy = () => {
     navigator.clipboard.writeText("bharathmay2005@gmail.com");
@@ -39,21 +41,29 @@ export function Contact() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setSuccess(false);
 
-    const res = await fetch("/api/contact", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(formData),
-    });
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
 
-    const data = await res.json();
-    setLoading(false);
+      const data = await res.json();
 
-    if (data.success) {
-      setSuccess(true);
-      setFormData({ name: "", email: "", message: "" });
+      if (data.success) {
+        setShowPopup(true);
+        setFormData({ name: "", email: "", message: "" });
+
+        setTimeout(() => {
+          setShowPopup(false);
+        }, 3500);
+      }
+    } catch (error) {
+      console.error("Error sending message:", error);
     }
+
+    setLoading(false);
   };
 
   const contactInfo = [
@@ -100,48 +110,64 @@ export function Contact() {
   ];
 
   return (
-    <section id="contact" className="py-28 px-6 bg-background relative">
+    <section
+      id="contact"
+      className="relative py-36 px-6 
+                 bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-900 
+                 overflow-hidden"
+    >
+      {/* Ambient Background */}
+      <div className="absolute top-0 left-0 w-96 h-96 bg-indigo-500/10 blur-3xl rounded-full -z-10" />
+      <div className="absolute bottom-0 right-0 w-96 h-96 bg-purple-500/10 blur-3xl rounded-full -z-10" />
+
       <div className="mx-auto max-w-6xl">
 
         {/* Header */}
-        <div className="text-center mb-16">
-          <p className="text-sm font-mono tracking-widest uppercase text-primary mb-4">
+        <div className="text-center mb-24">
+          <p className="text-sm font-mono tracking-widest uppercase text-indigo-400 mb-4">
             Contact
           </p>
 
-          <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
-            Let’s Connect & Build Something Meaningful
+          <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+            Let’s Build Something Exceptional
           </h2>
+
+          <p className="text-slate-400 max-w-2xl mx-auto">
+            Open to collaboration, internships, and impactful engineering
+            opportunities. Feel free to reach out.
+          </p>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-16">
+        <div className="grid lg:grid-cols-2 gap-20">
 
           {/* LEFT SECTION */}
-          <div className="space-y-6">
+          <div className="space-y-8">
 
             {/* Contact Cards */}
             {contactInfo.map((info) => (
               <div
                 key={info.label}
-                className={`flex items-center justify-between p-5 rounded-2xl border border-border 
-                bg-card hover:border-primary/40 hover:shadow-xl transition-all duration-300 ${
-                  info.highlight ? "ring-1 ring-primary/30" : ""
+                className={`flex items-center justify-between p-6 rounded-2xl
+                bg-white/5 backdrop-blur-xl
+                border border-white/10
+                hover:border-indigo-400/30
+                transition-all duration-300 ${
+                  info.highlight ? "ring-1 ring-indigo-400/20" : ""
                 }`}
               >
-                <div className="flex items-center gap-4">
-                  <div className="p-3 bg-primary/10 rounded-xl text-primary">
+                <div className="flex items-center gap-5">
+                  <div className="p-4 bg-indigo-500/10 rounded-xl text-indigo-400">
                     <info.icon size={20} />
                   </div>
 
                   <div>
-                    <p className="text-xs text-muted-foreground uppercase tracking-wide">
+                    <p className="text-xs text-slate-400 uppercase tracking-wide">
                       {info.label}
                     </p>
-
                     <Link
                       href={info.href}
                       target="_blank"
-                      className="text-foreground font-medium hover:text-primary transition"
+                      className="text-white font-medium hover:text-indigo-400 transition"
                     >
                       {info.value}
                     </Link>
@@ -151,7 +177,7 @@ export function Contact() {
                 {info.label === "Email" && (
                   <button
                     onClick={handleCopy}
-                    className="text-muted-foreground hover:text-primary transition"
+                    className="text-slate-400 hover:text-indigo-400 transition"
                   >
                     {copied ? <Check size={18} /> : <Copy size={18} />}
                   </button>
@@ -159,30 +185,31 @@ export function Contact() {
               </div>
             ))}
 
-            {/* CONTACT FORM */}
+            {/* FORM */}
             <form
               onSubmit={handleSubmit}
-              className="space-y-4 bg-card p-6 rounded-2xl border border-border"
+              className="space-y-5 bg-white/5 backdrop-blur-xl 
+                         border border-white/10 
+                         p-8 rounded-3xl"
             >
-              <input
-                type="text"
-                name="name"
-                placeholder="Your Name"
-                required
-                value={formData.name}
-                onChange={handleChange}
-                className="w-full p-3 rounded-lg bg-background border border-border focus:border-primary outline-none"
-              />
-
-              <input
-                type="email"
-                name="email"
-                placeholder="Your Email"
-                required
-                value={formData.email}
-                onChange={handleChange}
-                className="w-full p-3 rounded-lg bg-background border border-border focus:border-primary outline-none"
-              />
+              {["name", "email"].map((field) => (
+                <input
+                  key={field}
+                  type={field === "email" ? "email" : "text"}
+                  name={field}
+                  placeholder={
+                    field === "name" ? "Your Name" : "Your Email"
+                  }
+                  required
+                  value={(formData as any)[field]}
+                  onChange={handleChange}
+                  className="w-full p-4 rounded-xl 
+                             bg-black/30 border border-white/10 
+                             text-white placeholder-slate-400
+                             focus:border-indigo-400 
+                             focus:outline-none transition"
+                />
+              ))}
 
               <textarea
                 name="message"
@@ -191,29 +218,37 @@ export function Contact() {
                 required
                 value={formData.message}
                 onChange={handleChange}
-                className="w-full p-3 rounded-lg bg-background border border-border focus:border-primary outline-none"
+                className="w-full p-4 rounded-xl 
+                           bg-black/30 border border-white/10 
+                           text-white placeholder-slate-400
+                           focus:border-indigo-400 
+                           focus:outline-none transition"
               />
 
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-primary text-primary-foreground py-3 rounded-xl font-semibold hover:opacity-90 transition"
+                className="w-full py-4 rounded-xl font-semibold 
+                           bg-gradient-to-r from-indigo-500 to-purple-600 
+                           text-white
+                           flex items-center justify-center gap-3
+                           hover:opacity-90 transition
+                           disabled:opacity-60"
               >
-                {loading ? "Sending..." : "Send Message"}
+                {loading ? "Sending..." : (
+                  <>
+                    <Send size={18} />
+                    Send Message
+                  </>
+                )}
               </button>
-
-              {success && (
-                <p className="text-green-500 text-sm">
-                  Message sent successfully!
-                </p>
-              )}
             </form>
           </div>
 
-          {/* RIGHT SOCIAL SECTION */}
+          {/* RIGHT SECTION */}
           <div className="space-y-8">
-            <h3 className="text-2xl font-semibold text-foreground">
-              Connect with me online
+            <h3 className="text-2xl font-semibold text-white">
+              Additional Profiles
             </h3>
 
             <div className="grid gap-6">
@@ -223,19 +258,22 @@ export function Contact() {
                   href={social.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group flex items-center gap-5 p-6 rounded-2xl border border-border 
-                  bg-card hover:border-primary/50 hover:-translate-y-2 
-                  hover:shadow-2xl transition-all duration-300"
+                  className="group flex items-center gap-6 p-6 rounded-2xl
+                  bg-white/5 backdrop-blur-xl
+                  border border-white/10
+                  hover:border-indigo-400/30
+                  hover:-translate-y-2
+                  transition-all duration-300"
                 >
-                  <div className="p-4 bg-primary/10 rounded-xl text-primary group-hover:bg-primary/20 transition">
+                  <div className="p-4 bg-indigo-500/10 rounded-xl text-indigo-400">
                     <social.icon size={22} />
                   </div>
 
                   <div>
-                    <p className="font-semibold text-foreground group-hover:text-primary transition">
+                    <p className="font-semibold text-white group-hover:text-indigo-400 transition">
                       {social.label}
                     </p>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-sm text-slate-400">
                       {social.username}
                     </p>
                   </div>
@@ -245,6 +283,28 @@ export function Contact() {
           </div>
         </div>
       </div>
+
+      {/* SUCCESS POPUP */}
+      <AnimatePresence>
+        {showPopup && (
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 50 }}
+            transition={{ duration: 0.4 }}
+            className="fixed bottom-8 right-8 
+                       bg-gradient-to-r from-green-500 to-emerald-600
+                       text-white px-6 py-4 rounded-xl shadow-2xl 
+                       flex items-center gap-4 z-50"
+          >
+            <Check size={20} />
+            <span>Message sent successfully!</span>
+            <button onClick={() => setShowPopup(false)}>
+              <X size={18} />
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 }

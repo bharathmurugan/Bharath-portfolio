@@ -198,3 +198,6 @@
   background-size: 200% 200%;
   animation: gradientMove 5s ease infinite;
 }
+html {
+  scroll-behavior: smooth;
+}

@@ -31,106 +31,116 @@ export function Education() {
   ];
 
   return (
-    <section id="education" className="py-24 px-6">
+    <section
+      id="education"
+      className="relative py-36 px-6 
+                 bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-900 
+                 overflow-hidden"
+    >
+      {/* Subtle Ambient Background */}
+      <div className="absolute top-0 left-0 w-96 h-96 bg-indigo-500/10 blur-3xl rounded-full -z-10" />
+      <div className="absolute bottom-0 right-0 w-96 h-96 bg-purple-500/10 blur-3xl rounded-full -z-10" />
+
       <div className="mx-auto max-w-6xl">
 
         {/* Header */}
-        <div className="flex items-center gap-4 mb-16">
-          <span className="h-px flex-1 bg-border" />
-          <h2 className="text-sm font-mono text-primary tracking-widest uppercase">
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7 }}
+          viewport={{ once: true }}
+          className="text-center mb-28"
+        >
+          <p className="text-sm font-mono tracking-widest uppercase text-primary mb-4">
             Education
+          </p>
+
+          <h2 className="text-4xl md:text-5xl font-bold text-white">
+            Academic Background
           </h2>
-          <span className="h-px flex-1 bg-border" />
-        </div>
 
-        <div className="relative">
+          <p className="mt-4 text-slate-400 max-w-2xl mx-auto">
+            A structured academic foundation built on technical rigor,
+            analytical thinking, and consistent performance.
+          </p>
+        </motion.div>
 
-          {/* Timeline Line */}
-          <div className="absolute left-6 top-0 bottom-0 w-px bg-border hidden md:block" />
+        {/* Cards */}
+        <div className="grid md:grid-cols-3 gap-12">
 
-          <div className="space-y-16">
+          {education.map((edu, index) => (
+            <motion.div
+              key={edu.institution + edu.degree}
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{
+                duration: 0.6,
+                delay: index * 0.15,
+              }}
+              viewport={{ once: true }}
+              whileHover={{ y: -6 }}
+              className="group relative bg-white/5 backdrop-blur-xl
+                         border border-white/10
+                         rounded-3xl overflow-hidden
+                         transition-all duration-300"
+            >
+              {/* Institution Image */}
+              <div className="relative w-full h-52">
+                <Image
+                  src={edu.image}
+                  alt={edu.institution}
+                  fill
+                  className="object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+              </div>
 
-            {education.map((edu, index) => (
-              <motion.div
-                key={edu.institution + edu.degree}
-                className="relative flex gap-6 group"
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{
-                  duration: 0.6,
-                  delay: index * 0.2,
-                  ease: "easeOut",
-                }}
-                viewport={{ once: true, amount: 0.3 }}
-              >
+              {/* Content */}
+              <div className="p-8 flex flex-col space-y-4">
 
-                {/* Icon */}
-                <div className="hidden md:flex flex-col items-center">
-                  <div className="w-12 h-12 rounded-full bg-primary/10 
-                                  flex items-center justify-center 
-                                  border border-primary/30 z-10
-                                  group-hover:scale-110 
-                                  group-hover:bg-primary/20
-                                  transition-all duration-300">
-                    <GraduationCap size={20} className="text-primary" />
+                {/* Top Row */}
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2 text-white font-semibold">
+                    <GraduationCap size={18} className="text-indigo-400" />
+                    {edu.institution}
                   </div>
+
+                  {edu.current && (
+                    <span className="text-xs bg-indigo-500/20 text-indigo-300 px-3 py-1 rounded-full border border-indigo-400/20">
+                      Current
+                    </span>
+                  )}
                 </div>
 
-                {/* Card */}
-                <motion.div
-                  whileHover={{ y: -6 }}
-                  className="flex-1 p-6 bg-card border border-border rounded-xl 
-                             hover:border-primary/50 
-                             hover:shadow-2xl 
-                             transition-all duration-300"
-                >
+                {/* Degree */}
+                <p className="text-indigo-300 font-medium text-sm">
+                  {edu.degree}
+                </p>
 
-                  {/* High Quality Image */}
-                  <div className="relative w-full h-64 md:h-72 mb-6 rounded-xl overflow-hidden shadow-lg">
-                    <Image
-                      src={edu.image}
-                      alt={edu.institution}
-                      fill
-                      quality={100}
-                      priority
-                      sizes="(max-width: 768px) 100vw, 50vw"
-                      className="object-cover scale-105 transition-transform duration-500 group-hover:scale-110"
-                    />
-                  </div>
+                {/* Duration */}
+                <p className="text-xs text-slate-400 font-mono tracking-wide">
+                  {edu.duration}
+                </p>
 
-                  {/* Text Content */}
-                  <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 mb-3">
+                {/* Divider */}
+                <div className="h-px bg-white/10 my-2" />
 
-                    <h3 className="text-lg md:text-xl font-semibold text-foreground flex items-center gap-2">
-                      {edu.institution}
-
-                      {edu.current && (
-                        <span className="text-xs bg-primary/20 text-primary px-2 py-0.5 rounded-full">
-                          Current
-                        </span>
-                      )}
-                    </h3>
-
-                    <span className="text-sm text-muted-foreground font-mono">
-                      {edu.duration}
-                    </span>
-
-                  </div>
-
-                  <p className="text-primary font-medium mb-3">
-                    {edu.degree}
-                  </p>
-
-                  <p className="text-sm text-muted-foreground flex items-center gap-2">
-                    <Award size={14} />
+                {/* Grade */}
+                <div className="flex items-center gap-2 text-sm text-slate-300">
+                  <Award size={14} className="text-indigo-400" />
+                  <span className="font-semibold text-white">
                     {edu.grade}
-                  </p>
+                  </span>
+                </div>
 
-                </motion.div>
-              </motion.div>
-            ))}
+              </div>
 
-          </div>
+              {/* Subtle Hover Border Highlight */}
+              <div className="absolute inset-0 rounded-3xl border border-transparent 
+                              group-hover:border-indigo-400/30 
+                              transition duration-300 pointer-events-none" />
+            </motion.div>
+          ))}
+
         </div>
       </div>
     </section>
