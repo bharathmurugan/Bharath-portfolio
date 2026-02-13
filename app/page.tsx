@@ -21,17 +21,18 @@ export default function Page() {
         <PortfolioLoader onComplete={() => setLoading(false)} />
       )}
 
-      <div className={loading ? "hidden" : ""}>
-        <Navigation />
-         <Hero />
-        <About />
-         
-        <Skills />
-        <Experience />
-        <Projects />
-        <Education />
-        <Contact />
-      </div>
+      {!loading && (
+        <>
+          <Navigation />
+          <Hero />
+          <About />
+          <Skills />
+          <Experience />
+          <Projects />
+          <Education />
+          <Contact />
+        </>
+      )}
     </>
   );
 }
